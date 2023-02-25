@@ -9,6 +9,12 @@
     <!-- BOOTSTRAP-LINK -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 
+    <!-- sweetalert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- sweetalert -->
+    <script src="sweetalert2.min.js"></script>
+<link rel="stylesheet" href="sweetalert2.min.css">
+
 </head>
 <style>
     .form-group.note-form-group.note-group-select-from-files {
@@ -69,11 +75,21 @@ while
         $result = mysqli_query($conn, $sql);
         $showAlert = true;
         if ($showAlert) {
-            echo '
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-    <strong>Successfully</strong> Your Question Submitted Successfully
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>';
+            echo "
+            <script>
+            Swal.fire({
+                position: 'top-center',
+                icon: 'success',
+                title: 'Your work has been saved',
+                showConfirmButton: false,
+                timer: 1500
+            }).then(()=>{
+                window.location.href = './Mypost.php';
+            })
+                </script>
+                "
+                
+                ;
         }
     }
     ?>
@@ -99,15 +115,15 @@ while
 
                             <!-- ---ADD-NOTES -->
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <div class="icheck-primary d-inline">
 
                                 <label for="status">
                                 </label>
-                            </div>
+                            </div> -->
                             <!-- <label for="status" class="control-label">Published</label> -->
                             <button class="btn btn-flat btn-sm btn-primary bg-gradient-success rounded-0 my-3" form="post-form" type="submit"><i class="fa fa-save"></i>Published</button>
-<a href="./Mypost.php" class="btn-sm btn-primary bg-gradient-success rounded-0 my-3">Published</a>
+
 
 
                         </div>

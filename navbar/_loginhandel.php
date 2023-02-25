@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             //start session here
             session_start();
             $_SESSION['loggedin'] = true;
-            $_SESSION['user_id']=$row['sno'];
+            $_SESSION['user_id'] = $row['sno'];
             $_SESSION['user_email'] = $email;
             echo "loggedin " . $email;
         }

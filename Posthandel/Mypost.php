@@ -106,15 +106,10 @@
 
     <!-- CATEGORIES-SHOW -->
     <?php
-
-
-
-
-
     //Querry likhi hai jo categories table ka reccord database sa fetch kar ka lah ka aye ghi 
 
-    // $sql = "SELECT * FROM `posts` ";
-    $sql="SELECT * FROM `posts` WHERE  `post_user_id` = 2";
+$sql="SELECT posts.* FROM posts INNER JOIN users ON posts.post_user_id=users.sno WHERE users.sno = ".$_SESSION['user_id']."";
+
     $result = mysqli_query($conn, $sql);
     //While loop lagain gah reccord ko iterate kena ka lia
 
@@ -128,6 +123,7 @@
 
         //Ya cards ka code hai 
         echo '
+   
 <div class="col-md-4 my-2">
 <div class="card" style="width: 18rem;">
 
