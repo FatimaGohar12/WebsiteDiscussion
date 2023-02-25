@@ -10,8 +10,9 @@ if ($conn) {
 
   // echo "con successful";
 
-} else {
-  echo "not success";
+} 
+else {
+  // echo "not success";
 }
 
 ?>
@@ -104,15 +105,12 @@ if ($conn) {
       top: 0
     }
 
-#myTable{
-  margin-left: auto;
-  margin-right: auto;
-  border-spacing: 10px;
-/* border-collapse: separate; */
-}
-
-
-
+    #myTable {
+      margin-left: auto;
+      margin-right: auto;
+      border-spacing: 10px;
+      /* border-collapse: separate; */
+    }
   </style>
 
   <!-- jQuery -->
@@ -167,7 +165,7 @@ if ($conn) {
             <div class="dropdown-menu" role="menu">
               <a class="dropdown-item" href="http://localhost/odfs/admin/?page=user"><span class="fa fa-user"></span> My Account</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="http://localhost/odfs//classes/Login.php?f=logout"><span class="fas fa-sign-out-alt"></span> Logout</a>
+              <a class="dropdown-item" href="./AdminLogout.php"><span class="fas fa-sign-out-alt"></span> Logout</a>
             </div>
           </div>
         </li>
@@ -250,7 +248,27 @@ if ($conn) {
                 </p>
               </a>
             </li>
+            <!-- categories -->
+            <li class="nav-item">
+              <a href=".//category/category.php" class="nav-link">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                  Categories
+                  <span class="right badge badge-success">New</span>
+                </p>
+              </a>
+            </li>
 
+<!-- POST -->
+<li class="nav-item">
+                            <a href="./post/posthandel.php" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Posts
+                                    <span class="right badge badge-success">New</span>
+                                </p>
+                            </a>
+                        </li>
 
 
         </nav>
@@ -294,8 +312,8 @@ if ($conn) {
             <div class="col-12 mx-auto">
 
 
-              <table class="table table-striped table-hover" id="myTable"   style="text-align:center;">
-                <thead  class="thead-dark">
+              <table class="table table-striped table-hover" id="myTable" style="text-align:center;">
+                <thead class="thead-dark">
                   <tr>
                     <th scope="col">Id</th>
                     <th scope="col">Users</th>
@@ -311,32 +329,33 @@ if ($conn) {
                   // $sql = "SELECT * FROM `comments`";
                   $sql = "SELECT thread.*,comments.*,users.* FROM thread LEFT  JOIN comments ON comments.thread_id=thread.thread_id LEFT JOIN users on users.sno = thread.thread_user_id";
                   $result = mysqli_query($conn, $sql);
-                  $sno = 0;
+                   $sno = 0;
                   while ($row = mysqli_fetch_assoc($result)) {
                     //  var_dump($row);
-                    $sno = $sno + 1;
+                     $sno = $sno + 1;
                     $comments = $row['Comment_content'] ?? "No comments";
                     $name = $row['user_email'];
                     $thread = $row['thread_title'];
-                    $id=$row['comment_id'];
-                    echo 
+                    var_dump($id = $row['comment_id']);
+                    echo
                     "
                     <tr>
-                    <th scope='row'>" . $sno . "</th>
+                    <th scope='row'>" .  $sno . "</th>
                     <td>" . $name . "</td>
                     <td>" . $thread . "</td>
                     <td>" . $comments . "</td>
                     <td>
-
-
-<a href='./comentupdate.php?name=$name&thread=$thread&comments=$comments'
-class='text-light btn btn-success'>Update</a>
+                    <form action='./comentupdate.php' method ='GET'>
+                    <input type='hidden' name = 'updateid' value=" . $id . ">
+             
+                    <input type='submit' id='update' name ='update' value='Update' class = 'btn btn-success'>
+                    </form>
 </td>
 <td>
-<form action='./comentdelete.php' method ='post'>
-<input type='hidden' name = 'id' value=". $id .">
+<form action='./comentdelete.php' method ='posts  '>
+<input type='hidden' name='deleteid' value=". $id .">
 <input type='submit' id='delete' name ='delete' value='Delete' class = 'btn btn-danger'>
-
+</form>
 </td>
 
                   </tr>
@@ -412,7 +431,12 @@ class='text-light btn btn-success'>Update</a>
 </script>
   <!-- AdminLTE App -->
   <script src="http://localhost/odfs/dist/js/adminlte.js"></script>
-
+<script>
+  <?php
+    echo isset($_GET['successMsg']) ? "Swal.fire('Done!','".$_GET['successMsg']."')": "";
+  
+  ?>
+</script>
 
 </body>
 

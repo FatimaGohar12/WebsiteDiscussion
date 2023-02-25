@@ -1,16 +1,23 @@
-
 <?php
 
 require('../../Partials/_Db-connect.php');
-?>
+
+if (!isset($_GET['thid']));
 
 
-<?php
-if (isset($_POST['update'])) {
-    $title = $_POST['thread'];
-    $desc = $_POST['threaddesc'];   
-}
-// exit();
+$threadid = $_GET['thid'];
+$sql = "SELECT thread.*,comments.*,users.*,categories.* FROM thread LEFT  JOIN comments ON comments.thread_id=thread.thread_id LEFT JOIN users on users.sno = thread.thread_user_id 
+       LEFT JOIN categories on categories.`cat-id`= thread.thread_cat_id";
+
+
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+
+$title = $row['thread_title'];
+$desc = $row['thread_desc'];
+$name = $row['user_email'];
+$category = $row['cat-name'];
+
 ?>
 
 <html lang="en" class="" style="height: auto;">
@@ -19,13 +26,13 @@ if (isset($_POST['update'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Online Discussion Forum Site</title>
-    <link rel="icon" href="http://localhost/odfs/uploads/logo.png?v=1652665183">
-    
+    <link rel="icon" href="">
+
     <link rel="stylesheet" href="http://localhost/odfs/plugins/fontawesome-free/css/all.min.css">
-    
- 
+
+
     <link rel="stylesheet" href="http://localhost/odfs/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
-    
+
     <link rel="stylesheet" href="http://localhost/odfs/dist/css/adminlte.css">
     <link rel="stylesheet" href="http://localhost/odfs/dist/css/custom.css">
     <!-- overlayScrollbars -->
@@ -218,8 +225,29 @@ if (isset($_POST['update'])) {
                             <a href="./threadhandel.php" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
-                                   Thread
+                                    Thread
                                     <span class="right badge badge-danger">New</span>
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="./category.php" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Categories
+                                    <span class="right badge badge-success">New</span>
+                                </p>
+                            </a>
+                        </li>
+
+
+                        <li class="nav-item">
+                            <a href="../post/posthandel.php" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Posts
+                                    <span class="right badge badge-success">New</span>
                                 </p>
                             </a>
                         </li>
@@ -266,13 +294,22 @@ if (isset($_POST['update'])) {
                         <label for="title" class="control-label mx-2 ">Thread Title</label>
                         <input type="text" class="form-control rounded-0 mx-2" name="title" id="title" value="<?php echo "$title" ?>">
                     </div>
-                   
+
+                    <div class="form-group">
+                        <label for="title" class="control-label mx-2 ">Category Name</label>
+                        <input type="text" class="form-control rounded-0 mx-2" name="title" id="title" value="<?php echo "$category" ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="title" class="control-label mx-2 ">Posted By</label>
+                        <input type="text" class="form-control rounded-0 mx-2" name="title" id="title" value="<?php echo "$name" ?>">
+                    </div>
+
                     <div class="form-group">
                         <label for="title" class="control-label mx-2 ">Thread Description</label>
                         <textarea class="form-control" id="desc" rows="4" style="height: 209px;" name="desc"><?php echo "$desc" ?></textarea>
                     </div>
 
-                    <button  class="btn btn-success btn-lg" type="submit" name="submit">UPDATE</button>
+                    <button class="btn btn-success btn-lg" type="submit" name="submit">UPDATE</button>
         </div>
         </form>
         <!-- /.card -->
@@ -301,9 +338,9 @@ if (isset($_POST['update'])) {
     <!-- ./wrapper -->
 
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-    <script>
+    <!-- <script>
         $.widget.bridge('uibutton', $.ui.button)
-    </script>
+    </script> -->
     <!-- Bootstrap 4 -->
     <script src="http://localhost/odfs/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- ChartJS -->
@@ -328,7 +365,7 @@ if (isset($_POST['update'])) {
     <script src="http://localhost/odfs/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
     <script src="http://localhost/odfs/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
     <script src="http://localhost/odfs/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-<!-- for-alert-showing-when-update -->
+    <!-- for-alert-showing-when-update -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
@@ -340,54 +377,61 @@ if (isset($_POST['update'])) {
 
 <!-- php wriiten for updating the reccord -->
 <?php
- $sql="SELECT * FROM `thread`";
- $result = mysqli_query($conn, $sql);
+//  $sql="SELECT * FROM `thread`";
+//  $result = mysqli_query($conn, $sql);
 
- while ($row = mysqli_fetch_assoc($result)) {
-    $id = $row['thread_id'];
- }
-
-
-
-if (isset($_POST['submit']))
-{
-    $title = $_POST['title'];
-    $desc = $_POST['desc'];
-    
-
-    $sql = "UPDATE `thread` SET `thread_desc` = '$desc'  WHERE `thread_id` =$id";
-    
-    $result = mysqli_query($conn, $sql);
+//  while ($row = mysqli_fetch_assoc($result)) {
+//     $id = $row['thread_id'];
+//  }
 
 
-    if($result){
-        echo"
-        <script>
-        Swal.fire({
-            position: 'top-end',
-            icon: 'success',
-            title: 'Your work has been saved',
-            showConfirmButton: false,
-            timer: 1500
-        }).then(()=>{
-            window.location.href = './threadhandel.php';
-        })
-        </script>
-        ";
-        
-      
-    }
 
-    else{
-        echo"
-        <script>Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Something went wrong!',
-            footer: '<a href=''>Why do I have this issue?</a>'
-          })
-        </script>
-        ";
-    }
-}
+// if (isset($_POST['submit']))
+// {
+//     $title = $_POST['title'];
+//     $desc = $_POST['desc'];
+
+
+
+// $sql = "UPDATE `thread` SET `thread_title` =".$title." ,`thread_desc` = " . $desc ."  WHERE `thread`.`thread_id`=".$threadid. ";
+
+
+
+// $sql="UPDATE `thread` SET `thread_title` = '$title', `thread_desc` = '$desc' WHERE `thread`.`thread_id` =$threadid";
+
+// $result = mysqli_query($conn, $sql);
+
+
+// if($result)
+// {
+//     echo"
+//     <script>
+//     Swal.fire({
+//         position: 'top-end',
+//         icon: 'success',
+//         title: 'Your work has been saved',
+//         showConfirmButton: false,
+//         timer: 1500
+//     }).then(()=>{
+//         window.location.href = './threadhandel.php';
+//     })
+//     </script>
+//     ";
+
+
+// }
+
+// else{
+//     echo"
+//     <script>
+//     Swal.fire({
+//         icon: 'error',
+//         title: 'Oops...',
+//         text: 'Something went wrong!',
+//         footer: '<a href=''>Why do I have this issue?</a>'
+//       })
+//     </script>
+//     ";
+// }
+// }
 ?>

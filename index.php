@@ -19,7 +19,12 @@
     
 
     ?>
+<style>  
+body {  
+background:#ddd;  
+}  
 
+</style> 
     <!-- SLIDER -->
     <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
         <div class="carousel-indicators">

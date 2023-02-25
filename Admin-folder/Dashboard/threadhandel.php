@@ -16,6 +16,7 @@ if ($conn) {
 
 ?>
 
+
 <html lang="en" class="" style="height: auto;">
 
 <head>
@@ -104,16 +105,13 @@ if ($conn) {
       top: 0
     }
 
-#myTable{
-  margin-left: auto;
-  margin-right: auto;
-  border-spacing: 10px;
-  
-/* border-collapse: separate; */
-}
+    #myTable {
+      margin-left: auto;
+      margin-right: auto;
+      border-spacing: 10px;
 
-
-
+      /* border-collapse: separate; */
+    }
   </style>
 
   <!-- jQuery -->
@@ -168,7 +166,8 @@ if ($conn) {
             <div class="dropdown-menu" role="menu">
               <a class="dropdown-item" href="http://localhost/odfs/admin/?page=user"><span class="fa fa-user"></span> My Account</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="http://localhost/odfs//classes/Login.php?f=logout"><span class="fas fa-sign-out-alt"></span> Logout</a>
+              <a class="dropdown-item" href="./AdminLogout.php"><span class="fas fa-sign-out-alt"></span> Logout</a>
+
             </div>
           </div>
         </li>
@@ -246,12 +245,30 @@ if ($conn) {
               <a href="./threadhandel.php" class="nav-link">
                 <i class="nav-icon fas fa-th"></i>
                 <p>
-                 Thread
+                  Thread
                   <span class="right badge badge-success">New</span>
                 </p>
               </a>
             </li>
-
+            <li class="nav-item">
+              <a href=".//category/category.php" class="nav-link">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                  Categories
+                  <span class="right badge badge-success">New</span>
+                </p>
+              </a>
+            </li>
+<!-- POST -->
+<li class="nav-item">
+                            <a href="./post/posthandel.php" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Posts
+                                    <span class="right badge badge-success">New</span>
+                                </p>
+                            </a>
+                        </li>
 
 
         </nav>
@@ -266,7 +283,6 @@ if ($conn) {
       <!-- /.sidebar-custom -->
     </aside>
 
-
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
@@ -274,31 +290,18 @@ if ($conn) {
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1>Thread</h1>
+              <h1>Categories</h1>
+              <a href="" class="btn btn-primary my-3">Create New</a>
             </div>
-            <div class="col-sm-6">
-              <!-- <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Layout</a></li>
-                <li class="breadcrumb-item active">Fixed Layout</li>
-              </ol> -->
-            </div>
-          </div>
-        </div><!-- /.container-fluid -->
-      </section>
+            <!-- Main content -->
 
-      <!-- Main content -->
-      <section class="content">
-
-        <div class="container-fluid ">
-          <div class="row">
             <div class="col-12 mx-auto">
-
-
-              <table class="table table-striped table-hover" id="myTable"   style="text-align:center;">
-                <thead  class="thead-dark">
+              <table class="table table-striped table-hover" id="myTable" style="text-align:center;">
+                <thead class="thead-dark">
                   <tr>
                     <th scope="col">Id</th>
+                    <th scope="col">Posted By</th>
+                    <th scope="col">Category Name</th>
                     <th scope="col">Thread Title</th>
                     <th scope="col">Thread Description</th>
                     <th scope="col">Actions</th>
@@ -306,42 +309,57 @@ if ($conn) {
                   </tr>
                 </thead>
                 <tbody>
+                <?php
+
+$sqln="SELECT * FROM `thread`";
+$result = mysqli_query($conn, $sqln);
+
+while ($row = mysqli_fetch_assoc($result)) {
+ 
+    var_dump($thid = $row['thread_id']);
+}
+            
+            ?>
                   <pre>
                   <?php
-                  // $sql = "SELECT * FROM `comments`";
-              
-                  $sql="SELECT * FROM `thread`";
+                  $sql = "SELECT thread.*,comments.*,users.*,categories.* FROM thread LEFT  JOIN comments ON comments.thread_id=thread.thread_id LEFT JOIN users on users.sno = thread.thread_user_id 
+                  LEFT JOIN categories on categories.`cat-id`= thread.thread_cat_id";
+
                   $result = mysqli_query($conn, $sql);
                   $sno = 0;
                   while ($row = mysqli_fetch_assoc($result)) {
-                    //  var_dump($row);
+                   
                     $sno = $sno + 1;
-                    // $comments = $row['Comment_content'] ?? "No comments";
                     $thread = $row['thread_title'];
                     $threadDesc = $row['thread_desc'];
-                  
-                    echo 
+                    // var_dump($threadid = $row['thread_id']);
+                   
+                    $name = $row['user_email'];
+                    $category = $row['cat-name'];
+                   
+
+                    echo
                     "
                     <tr>
                     <th scope='row'>" . $sno . "</th>
+                    <th>" . $name . "</th>
+                    <th>" . $category . "</th>
                     <td>" . $thread . "</td>
                     <td>" . substr($threadDesc, 0, 20) . "</td>
+
                     <td>
 
-
-
-                    <form action='./threadUpdate.php' method ='post'>
-<input type='hidden' name = 'thread' value=".$thread.">
-<input type='hidden' name = 'threaddesc' value=".$threadDesc.">
-<input type='submit' id='update' name ='update' value='Update' class = 'btn btn-success'>
-
-</td>
+                    <form action='./threadUpdate.php'?thid=' . $thid . ' method ='post'>
+                    <input type='hidden' name = 'threadid' value=" . $thid . ">
+                    <input type='submit' id='' name ='' value='Update' class = 'btn btn-success'>
+                    </form>
+                    </td>
 <td>
 
 <form action='./threaddelete.php' method ='post'>
-<input type='hidden' name = 'id' value=''>
+<input type='hidden' name = 'threadid' value=" . $thid . ">
 <input type='submit' id='' name ='' value='Delete' class = 'btn btn-danger'>
-
+</form>
 </td>
 
                   </tr>
@@ -349,25 +367,20 @@ if ($conn) {
                   }
                   ?>
             
+
+           
                 </tbody>
               </table>
 
-              <!-- /.card-footer-->
-            </div>
-            <!-- /.card -->
-          </div>
-        </div>
-    </div>
-    </section>
-    <!-- /.content -->
-  </div>
-
-
-
-
-
+              </div>
+                    </div>
+                </div>
+               
+                </container-fluid>
+            </section>
   <!-- /.content -->
   <footer class="main-footer text-sm">
+    
     <strong>Copyright © 2023.
       <!-- <a href=""></a> -->
     </strong>
@@ -417,7 +430,12 @@ if ($conn) {
 </script>
   <!-- AdminLTE App -->
   <script src="http://localhost/odfs/dist/js/adminlte.js"></script>
+  <script>
+  <?php
+  echo isset($_GET['successMsg']) ? "Swal.fire('Done!','" . $_GET['successMsg'] . "')" : "";
 
+  ?>
+</script>
 
 </body>
 

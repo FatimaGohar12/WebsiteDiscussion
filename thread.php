@@ -21,6 +21,12 @@
    
 
     ?>
+    <style>  
+body {  
+background:#ddd;  
+}  
+
+</style> 
     <!-- yahan pa wo querry likhi hai jo show karti hai category ka name jumbotron pa ur neecha questions show krna ka lia  -->
     <?php
     // ya threadid URL main di hoi hai is lia get request ki hai id lana ka lia
@@ -41,7 +47,15 @@
         $result2 = mysqli_query($conn, $sql2);
         $row2 = mysqli_fetch_assoc($result2);
         // $posted_by = $row2['user_email'];
+        
     }
+    //user-id la ka ana ka lia
+    $sql = "SELECT * FROM `users`";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($result);
+    $comment_id = $row['sno']; 
+
+
     ?>
     <!-- comment submit krna ka lia code database main submit ho jaye  -->
     <?php
@@ -54,7 +68,7 @@
 
         //Insert querry add for data in database
         $sql = "INSERT INTO `comments` (`comment _by`, `thread_id`, `comment_time`, `Comment_content`) VALUES 
-        ('0', '$id', current_timestamp(), '$comment');";
+        ('$comment_id', '$id', current_timestamp(), '$comment');";
         $result = mysqli_query($conn, $sql);
         $showAlert = true;
         if ($showAlert) {
@@ -112,6 +126,9 @@
            <p class="lead">Please Logedin to post a questions</p>
            </div>';
     }
+
+
+    
     ?>
 
 

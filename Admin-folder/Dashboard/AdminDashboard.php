@@ -60,6 +60,13 @@
           </div>
         </li>
 
+
+
+
+
+
+
+
         <!-- Messages Dropdown Menu -->
         <li class="nav-item dropdown">
           <a class="nav-link" data-toggle="dropdown" href="#">
@@ -224,6 +231,27 @@
                 </p>
               </a>
             </li>
+            <!-- categories -->
+            <li class="nav-item">
+              <a href=".//category/category.php" class="nav-link">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                  Categories
+                  <span class="right badge badge-success">New</span>
+                </p>
+              </a>
+            </li>
+
+<!-- POST -->
+<li class="nav-item">
+                            <a href="./post/posthandel.php" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Posts
+                                    <span class="right badge badge-success">New</span>
+                                </p>
+                            </a>
+                        </li>
 
 
 

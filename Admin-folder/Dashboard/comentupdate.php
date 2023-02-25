@@ -5,10 +5,20 @@ require('../../Partials/_Db-connect.php');
 
 
 <?php
-$name = $_GET['name'];
-$thread = $_GET['thread'];
-$comments = $_GET['comments'];
-// exit();
+
+if(!isset($_GET['updateid'])) header('location:/');
+$updateid = $_GET['updateid'];
+
+    $nsql = "SELECT thread.*,comments.*,users.* FROM thread LEFT JOIN comments ON comments.thread_id=thread.thread_id LEFT JOIN users on users.sno = thread.thread_user_id WHERE comments.comment_id =$updateid";
+
+
+    $result = mysqli_query($conn, $nsql);
+    $row = mysqli_fetch_assoc($result);
+   
+    $updatename = $row['user_email'];
+    $updatethread = $row['thread_title'];
+    $updatecomments = $row['Comment_content'];
+
 ?>
 
 <html lang="en" class="" style="height: auto;">
@@ -230,12 +240,32 @@ $comments = $_GET['comments'];
                             <a href="./threadhandel.php" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
-                                   Thread
+                                    Thread
                                     <span class="right badge badge-success">New</span>
                                 </p>
                             </a>
                         </li>
 
+                        <li class="nav-item">
+                            <a href="./category.php" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Categories
+                                    <span class="right badge badge-success">New</span>
+                                </p>
+                            </a>
+                        </li>
+
+
+                        <li class="nav-item">
+                            <a href="../post/posthandel.php" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Posts
+                                    <span class="right badge badge-success">New</span>
+                                </p>
+                            </a>
+                        </li>
 
 
                 </nav>
@@ -273,24 +303,25 @@ $comments = $_GET['comments'];
 
             <!-- Main content -->
             <section class="content">
-                <form action="" method="GET">
+                <form action="" method="post">
                     <div class="form-group">
                         <label for="title" class="control-label mx-2 ">Title</label>
-                        <input type="text" class="form-control rounded-0 mx-2" name="thread" id="title" value="<?php echo "$thread" ?>">
+                        <input type="text" class="form-control rounded-0 mx-2" name="thread" id="title" value="<?php echo "$updatethread" ?>">
                     </div>
+
                     <div class="form-group">
                         <label for="title" class="control-label mx-2 ">Comment By </label>
-                        <input type="text" class="form-control rounded-0 mx-2" name="name" id="title" value="<?php echo "$name" ?>">
+                        <input type="text" class="form-control rounded-0 mx-2" name="name" id="title" value="<?php echo "$updatename" ?>">
                     </div>
 
 
 
                     <div class="form-group">
                         <label for="title" class="control-label mx-2 ">Comment</label>
-                        <textarea class="form-control" id="" rows="4" style="height: 209px;" name="comments"><?php echo "$comments" ?></textarea>
+                        <textarea class="form-control" id="" rows="4" style="height: 209px;" name="comments"><?php echo "$updatecomments" ?></textarea>
                     </div>
 
-                    <button  class="btn btn-success btn-lg" type="submit" name="submit">UPDATE</button>
+                    <button class="btn btn-success btn-lg" type="submit" name="submit">UPDATE</button>
         </div>
         </form>
         <!-- /.card -->
@@ -347,7 +378,7 @@ $comments = $_GET['comments'];
     <script src="http://localhost/odfs/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
     <script src="http://localhost/odfs/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
     <script src="http://localhost/odfs/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-<!-- for-alert-showing-when-update -->
+    <!-- for-alert-showing-when-update -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
@@ -359,28 +390,22 @@ $comments = $_GET['comments'];
 
 <!-- php wriiten for updating the reccord -->
 <?php
- $sql="SELECT * FROM `comments`";
- $result = mysqli_query($conn, $sql);
-
- while ($row = mysqli_fetch_assoc($result)) {
-    $id = $row['comment_id'];
- }
+$sql = "SELECT * FROM `comments`";
+$result = mysqli_query($conn, $sql);
 
 
+if (isset($_POST['submit'])) {
+    // $thread = $_POST['thread'];
+    $name = $_POST['name'];
+    $comments = $_POST['comments'];
 
-if (isset($_GET['submit']))
-{
-    $thread = $_GET['thread'];
-    $name = $_GET['name'];
-    $comments = $_GET['comments'];
+    $sql = "UPDATE `comments` SET `Comment_content` = ' $comments'  WHERE `comment_id` =$updateid";
 
-    $sql = "UPDATE `comments` SET `Comment_content` = ' $comments'  WHERE `comment_id` =$id";
-    
     $result = mysqli_query($conn, $sql);
 
 
-    if($result){
-        echo"
+    if ($result) {
+        echo "
         <script>
         Swal.fire({
             position: 'top-end',
@@ -393,12 +418,8 @@ if (isset($_GET['submit']))
         })
         </script>
         ";
-        
-      
-    }
-
-    else{
-        echo"
+    } else {
+        echo "
         <script>alert('Error while processing')</script>
         ";
     }

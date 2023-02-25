@@ -22,6 +22,15 @@
     
 
     ?>
+
+<style>  
+body {  
+background:#ddd;  
+}  
+
+</style> 
+
+
     <!-- yahan pa wo querry likhi hai jo show karti hai category ka name jumbotron pa ur neecha questions show krna ka lia  -->
     <?php
     // ya catid URL main di hoi hai is lia get request ki hai id lana ka lia
@@ -37,6 +46,12 @@
         $catname = $row['cat-name'];
         $catdesc = $row['cat-desc'];
     }
+
+     //user-id la ka ana ka lia
+     $sql = "SELECT * FROM `users`";
+     $result = mysqli_query($conn, $sql);
+     $row = mysqli_fetch_assoc($result);
+     $comment_id = $row['sno']; 
     ?>
     <!-- form submit krna ka lia code database main submit ho jaye  -->
     <?php
@@ -48,7 +63,7 @@
         $th_desc = $_POST['desc'];
 
         //Insert querry add for data in database
-        $sql = "INSERT INTO `thread` (`thread_title`, `thread_desc`, `thread_cat_id`, `thread_user_id`, `timestamp`) VALUES ('$th_title', '$th_desc', '$id', '0',current_timestamp())";
+        $sql = "INSERT INTO `thread` (`thread_title`, `thread_desc`, `thread_cat_id`, `thread_user_id`, `timestamp`) VALUES ('$th_title', '$th_desc', '$id', '$comment_id',current_timestamp())";
         $result = mysqli_query($conn, $sql);
         $showAlert = true;
         if ($showAlert) {
